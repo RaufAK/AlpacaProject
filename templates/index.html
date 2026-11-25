@@ -1,0 +1,1357 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Alpaca Account Dashboard</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        --page: #0a1020;
+        --surface: #111a2d;
+        --surface-raised: #17233a;
+        --surface-soft: #131e32;
+        --border: #263550;
+        --text: #edf3ff;
+        --muted: #91a2bc;
+        --accent: #7c6cff;
+        --accent-bright: #9c91ff;
+        --cyan: #45d6d0;
+        --green: #38d996;
+        --red: #ff7187;
+        --shadow: 0 18px 50px #03081755;
+        color: var(--text);
+        background: var(--page);
+      }
+
+      :root[data-theme="light"] {
+        color-scheme: light;
+        --page: #f1f4fb;
+        --surface: #ffffff;
+        --surface-raised: #f8faff;
+        --surface-soft: #f4f6ff;
+        --border: #dce3f0;
+        --text: #172239;
+        --muted: #687891;
+        --accent: #624fe5;
+        --accent-bright: #513fd1;
+        --cyan: #078e9b;
+        --green: #138458;
+        --red: #cc4056;
+        --shadow: 0 18px 50px #34446a12;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: clamp(20px, 4vw, 48px) clamp(16px, 4vw, 40px) 56px;
+        background:
+          radial-gradient(ellipse at 12% 0%, #735bff20, transparent 34rem),
+          radial-gradient(ellipse at 90% 12%, #26d8ce12, transparent 30rem),
+          var(--page);
+        color: var(--text);
+        transition: background-color 180ms ease, color 180ms ease;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      .login-shell {
+        display: grid;
+        min-height: calc(100vh - 104px);
+        place-items: center;
+      }
+
+      .login-card {
+        position: relative;
+        width: min(100%, 470px);
+        padding: clamp(24px, 5vw, 42px);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        background:
+          radial-gradient(ellipse at 100% 0%, #7c6cff20, transparent 55%),
+          var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .login-card .brand-mark {
+        margin-bottom: 24px;
+      }
+
+      .login-theme-toggle {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+      }
+
+      .login-card h1 {
+        margin-bottom: 10px;
+      }
+
+      .login-card .login-intro {
+        margin-bottom: 25px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .login-field {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 17px;
+      }
+
+      .login-field label {
+        font-size: 0.87rem;
+        font-weight: 650;
+      }
+
+      .login-field input {
+        width: 100%;
+        min-height: 46px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 11px 13px;
+        background: var(--surface-raised);
+        color: var(--text);
+        font: inherit;
+        outline: none;
+      }
+
+      .login-field input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px #7c6cff2b;
+      }
+
+      .secret-input {
+        display: flex;
+        gap: 8px;
+      }
+
+      .secret-input input {
+        min-width: 0;
+        flex: 1;
+      }
+
+      .secret-input button {
+        min-height: 46px;
+      }
+
+      #login-submit {
+        width: 100%;
+        min-height: 46px;
+        margin-top: 5px;
+        border: 0;
+        background: linear-gradient(120deg, #7664ff, #4b8de8);
+        color: white;
+        box-shadow: 0 8px 20px #655aff35;
+      }
+
+      #login-message {
+        min-height: 1.4em;
+        margin: 12px 0 0;
+        color: var(--red);
+        font-size: 0.87rem;
+      }
+
+      .login-footnote {
+        margin: 20px 0 0;
+        padding: 13px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface-soft);
+        color: var(--muted);
+        font-size: 0.78rem;
+        line-height: 1.55;
+      }
+
+      header, .section-heading, .asset-controls, .chart-controls, .trade-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      header {
+        margin-bottom: 30px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        min-width: 0;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 48px;
+        height: 48px;
+        flex: 0 0 auto;
+        place-items: center;
+        border: 1px solid #a69cff65;
+        border-radius: 16px;
+        background: linear-gradient(145deg, #826fff, #3e8de0);
+        box-shadow: 0 8px 28px #715cff45;
+        color: white;
+        font-size: 1.45rem;
+        font-weight: 800;
+      }
+
+      h1, h2, h3, p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 4px;
+        font-size: clamp(1.55rem, 3vw, 2rem);
+        letter-spacing: -0.045em;
+      }
+
+      h2 {
+        margin-bottom: 0;
+        font-size: 1.08rem;
+        letter-spacing: -0.02em;
+      }
+
+      h3 {
+        margin-bottom: 6px;
+        font-size: 1rem;
+      }
+
+      .muted, #updated, .chart-axis {
+        color: var(--muted);
+      }
+
+      .tagline {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 0 0 auto;
+      }
+
+      .paper-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 11px;
+        border: 1px solid #38d99640;
+        border-radius: 999px;
+        background: #38d99612;
+        color: var(--green);
+        font-size: 0.78rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .paper-badge::before {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+        content: "";
+        box-shadow: 0 0 12px currentColor;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin: 0 0 24px;
+      }
+
+      .card, .panel {
+        min-width: 0;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        background: var(--surface);
+        box-shadow: var(--shadow);
+      }
+
+      .card {
+        position: relative;
+        overflow: hidden;
+        padding: 22px;
+      }
+
+      .account-cards .card::after {
+        position: absolute;
+        top: -34px;
+        right: -24px;
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        content: "";
+        filter: blur(1px);
+        opacity: 0.16;
+      }
+
+      .account-cards .card:nth-child(1)::after {
+        background: var(--cyan);
+      }
+
+      .account-cards .card:nth-child(2)::after {
+        background: var(--accent);
+      }
+
+      .account-cards .card:nth-child(3)::after {
+        background: #ffb454;
+      }
+
+      .card h2 {
+        margin-bottom: 13px;
+        color: var(--muted);
+        font-size: 0.86rem;
+        font-weight: 600;
+      }
+
+      .value {
+        margin: 0;
+        font-size: clamp(1.25rem, 2.8vw, 1.8rem);
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+        letter-spacing: -0.035em;
+        overflow-wrap: anywhere;
+      }
+
+      .panel {
+        margin-bottom: 24px;
+        padding: clamp(18px, 3vw, 28px);
+      }
+
+      .section-heading {
+        margin-bottom: 22px;
+      }
+
+      .asset-controls {
+        justify-content: flex-start;
+        margin: 0 0 20px;
+      }
+
+      .search-box {
+        position: relative;
+        max-width: 560px;
+        margin-bottom: 20px;
+      }
+
+      .search-box label, .asset-controls label, .trade-controls label {
+        color: var(--muted);
+        font-size: 0.84rem;
+        font-weight: 600;
+      }
+
+      .search-box label {
+        display: block;
+        margin-bottom: 8px;
+      }
+
+      .search-box input, .trade-controls input, select {
+        min-height: 44px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface-raised);
+        color: var(--text);
+        font: inherit;
+        outline: none;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+      }
+
+      .search-box input, .trade-controls input {
+        padding: 10px 13px;
+      }
+
+      .search-box input {
+        width: 100%;
+        padding-left: 42px;
+        background-image: none;
+      }
+
+      .search-box::after {
+        position: absolute;
+        bottom: 11px;
+        left: 14px;
+        color: var(--muted);
+        content: "⌕";
+        font-size: 1.35rem;
+        line-height: 1;
+        pointer-events: none;
+      }
+
+      .search-box input:focus, .trade-controls input:focus, select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px #7c6cff2b;
+      }
+
+      .search-box input::placeholder, .trade-controls input::placeholder {
+        color: var(--muted);
+        opacity: 0.72;
+      }
+
+      #search-results {
+        position: absolute;
+        z-index: 5;
+        top: 100%;
+        right: 0;
+        left: 0;
+        max-height: 260px;
+        overflow-y: auto;
+        margin: 6px 0 0;
+        padding: 5px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: var(--surface-raised);
+        list-style: none;
+        box-shadow: var(--shadow);
+      }
+
+      #search-results:empty {
+        display: none;
+      }
+
+      #search-results button {
+        width: 100%;
+        border: 0;
+        border-radius: 8px;
+        padding: 10px 12px;
+        background: transparent;
+        color: var(--text);
+        text-align: left;
+      }
+
+      #search-results button:hover {
+        background: #7c6cff1c;
+      }
+
+      #search-results small {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+      }
+
+      .held-label {
+        display: grid;
+        gap: 5px;
+      }
+
+      select {
+        min-width: 160px;
+        padding: 9px 34px 9px 12px;
+      }
+
+      .holding-cards {
+        margin-top: 22px;
+      }
+
+      .holding-cards .card {
+        background: linear-gradient(145deg, var(--surface-raised), var(--surface));
+        box-shadow: none;
+      }
+
+      .holding-cards .card:first-child {
+        border-top-color: #45d6d080;
+      }
+
+      .holding-cards .card:nth-child(2) {
+        border-top-color: #7c6cff9c;
+      }
+
+      .holding-cards .card:nth-child(3) {
+        border-top-color: #ffb4548c;
+      }
+
+      #profit-loss-percent {
+        margin: 8px 0 0;
+        font-size: 0.83rem;
+      }
+
+      .trade-panel {
+        margin: 6px 0 28px;
+        padding: 18px;
+        border: 1px solid #7c6cff48;
+        border-radius: 14px;
+        background:
+          linear-gradient(110deg, #7c6cff13, transparent 68%),
+          var(--surface-soft);
+      }
+
+      .trade-panel > p {
+        margin-bottom: 14px;
+        font-size: 0.86rem;
+      }
+
+      .trade-controls {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .trade-controls input {
+        width: 150px;
+      }
+
+      #trade-message {
+        min-height: 1.4em;
+        margin: 12px 0 0;
+        font-size: 0.84rem;
+      }
+
+      button {
+        min-height: 42px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 9px 14px;
+        background: var(--surface-raised);
+        color: var(--text);
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 140ms ease, filter 140ms ease, background 140ms ease;
+      }
+
+      button:hover:not(:disabled) {
+        filter: brightness(1.12);
+        transform: translateY(-1px);
+      }
+
+      button:focus-visible {
+        outline: 3px solid #7c6cff70;
+        outline-offset: 2px;
+      }
+
+      button:disabled, select:disabled {
+        opacity: 0.55;
+        cursor: wait;
+      }
+
+      #refresh, #theme-toggle {
+        white-space: nowrap;
+      }
+
+      #logout {
+        border-color: var(--border);
+        background: var(--surface-raised);
+        color: var(--muted);
+      }
+
+      #refresh {
+        border-color: transparent;
+        background: linear-gradient(120deg, #7664ff, #4b8de8);
+        color: white;
+        box-shadow: 0 8px 20px #655aff35;
+      }
+
+      #theme-toggle {
+        min-width: 44px;
+      }
+
+      [data-order-side="buy"] {
+        min-width: 88px;
+        border-color: #38d99655;
+        background: #38d99620;
+        color: var(--green);
+      }
+
+      [data-order-side="sell"] {
+        min-width: 88px;
+        border-color: #ff718755;
+        background: #ff71871a;
+        color: var(--red);
+      }
+
+      .chart-controls {
+        justify-content: flex-start;
+        flex: 0 0 auto;
+        gap: 6px;
+        padding: 4px;
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        background: var(--surface-soft);
+      }
+
+      .chart-controls button {
+        min-width: 48px;
+        min-height: 34px;
+        border: 0;
+        border-radius: 8px;
+        padding: 6px 10px;
+        background: transparent;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .chart-controls button[aria-pressed="true"] {
+        background: var(--accent);
+        color: white;
+        box-shadow: 0 4px 12px #655aff45;
+      }
+
+      #chart-heading {
+        overflow-wrap: anywhere;
+      }
+
+      .chart-wrap {
+        position: relative;
+        min-height: 280px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background:
+          radial-gradient(ellipse at 20% 100%, #7c6cff12, transparent 55%),
+          var(--surface-soft);
+      }
+
+      #chart {
+        display: block;
+        width: 100%;
+        height: 320px;
+        overflow: visible;
+      }
+
+      .chart-axis {
+        fill: var(--muted);
+        font-size: 12px;
+      }
+
+      .chart-grid {
+        stroke: var(--border);
+        stroke-width: 1;
+      }
+
+      .chart-line {
+        fill: none;
+        stroke: var(--cyan);
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 3;
+        filter: drop-shadow(0 0 5px #45d6d066);
+      }
+
+      #chart-message {
+        position: absolute;
+        inset: 48% 16px auto;
+        margin: 0;
+        text-align: center;
+        transform: translateY(-50%);
+      }
+
+      #message {
+        min-height: 0;
+        margin: 0 0 16px;
+        color: var(--red);
+        font-size: 0.9rem;
+      }
+
+      #message:empty {
+        display: none;
+      }
+
+      .positive {
+        color: var(--green) !important;
+      }
+
+      .negative {
+        color: var(--red) !important;
+      }
+
+      @media (max-width: 720px) {
+        body {
+          padding-top: 24px;
+        }
+
+        .cards {
+          gap: 12px;
+        }
+
+        .card {
+          padding: 17px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        header {
+          align-items: flex-start;
+          gap: 12px;
+        }
+
+        .brand {
+          gap: 10px;
+        }
+
+        .brand-mark {
+          width: 40px;
+          height: 40px;
+          border-radius: 13px;
+        }
+
+        .header-actions {
+          gap: 7px;
+        }
+
+        .paper-badge {
+          display: none;
+        }
+
+        #refresh {
+          min-height: 40px;
+          padding: 8px 10px;
+          font-size: 0.84rem;
+        }
+
+        #theme-toggle {
+          min-width: 40px;
+          min-height: 40px;
+          padding: 7px;
+        }
+
+        .account-cards {
+          grid-template-columns: 1fr;
+        }
+
+        .account-cards .card {
+          padding: 16px 18px;
+        }
+
+        .account-cards .card h2 {
+          margin-bottom: 7px;
+        }
+
+        .account-cards .value {
+          font-size: 1.4rem;
+        }
+
+        .section-heading {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .asset-controls {
+          align-items: stretch;
+        }
+
+        .held-label, .held-label select {
+          width: 100%;
+        }
+
+        .holding-cards {
+          grid-template-columns: 1fr;
+        }
+
+        .holding-cards .card {
+          padding: 16px 18px;
+        }
+
+        .holding-cards .value {
+          font-size: 1.45rem;
+        }
+
+        .trade-controls {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+
+        .trade-controls label {
+          grid-column: 1 / -1;
+        }
+
+        .trade-controls input {
+          width: 100%;
+          grid-column: 1 / -1;
+        }
+
+        .trade-controls button {
+          width: 100%;
+        }
+
+        .chart-wrap {
+          min-height: 240px;
+        }
+
+        #chart {
+          height: 260px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <section id="login-screen" class="login-shell" aria-labelledby="login-title">
+      <div class="login-card">
+        <button id="login-theme-toggle" class="login-theme-toggle" type="button"
+          data-theme-toggle aria-label="Switch to light mode" title="Switch to light mode">☀</button>
+        <div class="brand-mark" aria-hidden="true">A</div>
+        <h1 id="login-title">Connect your Alpaca account</h1>
+        <p class="login-intro">
+          Sign in with your Alpaca paper-trading API credentials to view your
+          portfolio and place simulated trades.
+        </p>
+        <form id="login-form">
+          <div class="login-field">
+            <label for="api-key">Paper API key</label>
+            <input id="api-key" name="api_key" type="text" required
+              autocomplete="off" autocapitalize="none" spellcheck="false"
+              placeholder="Your paper API key">
+          </div>
+          <div class="login-field">
+            <label for="secret-key">Paper API secret</label>
+            <div class="secret-input">
+              <input id="secret-key" name="secret_key" type="password" required
+                autocomplete="new-password" placeholder="Your paper API secret">
+              <button id="secret-toggle" type="button" aria-label="Show API secret">Show</button>
+            </div>
+          </div>
+          <button id="login-submit" type="submit">Connect paper account</button>
+          <p id="login-message" role="status" aria-live="polite"></p>
+        </form>
+        <p class="login-footnote">
+          Get these from Alpaca’s Paper Trading API Keys. Alpaca website
+          passwords, OAuth, and live-trading keys are not supported. Credentials
+          entered here stay in this app’s memory while it runs and are not saved
+          to disk.
+        </p>
+      </div>
+    </section>
+
+    <main id="dashboard" hidden>
+      <header>
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">A</div>
+          <div>
+            <h1>Alpaca Dashboard</h1>
+            <p class="tagline">Your portfolio, at a glance</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <span class="paper-badge">Paper trading</span>
+          <button id="theme-toggle" type="button" data-theme-toggle
+            aria-label="Switch to light mode" title="Switch to light mode">☀</button>
+          <button id="refresh" type="button">Refresh</button>
+          <button id="logout" type="button">Log out</button>
+        </div>
+      </header>
+
+      <p id="message" role="status" aria-live="polite">Loading account information…</p>
+
+      <section class="cards account-cards" aria-label="Account information">
+        <article class="card">
+          <h2>Account status</h2>
+          <p class="value" id="status">—</p>
+        </article>
+        <article class="card">
+          <h2>Cash</h2>
+          <p class="value" id="cash">—</p>
+        </article>
+        <article class="card">
+          <h2>Buying power</h2>
+          <p class="value" id="buying-power">—</p>
+        </article>
+      </section>
+
+      <section class="panel" aria-labelledby="asset-heading">
+        <div class="section-heading">
+          <h2 id="asset-heading">Stocks and ETFs</h2>
+          <span id="updated" class="muted"></span>
+        </div>
+        <div class="search-box">
+          <label for="asset-search">Find a stock or ETF</label>
+          <input id="asset-search" type="search" autocomplete="off"
+            placeholder="Search by symbol or company name">
+          <ul id="search-results" role="listbox" aria-label="Search results"></ul>
+        </div>
+        <div class="asset-controls">
+          <label class="held-label" for="asset-select">
+            Held positions
+            <select id="asset-select" disabled>
+              <option>Loading assets…</option>
+            </select>
+          </label>
+        </div>
+        <div class="cards holding-cards">
+          <article class="card">
+            <h2>Current price</h2>
+            <p class="value" id="price">—</p>
+          </article>
+          <article class="card">
+            <h2>Amount owned</h2>
+            <p class="value" id="quantity">—</p>
+          </article>
+          <article class="card">
+            <h2>Unrealized profit/loss</h2>
+            <p class="value" id="profit-loss">—</p>
+            <p class="muted" id="profit-loss-percent"></p>
+          </article>
+        </div>
+        <section class="trade-panel" aria-labelledby="trade-heading">
+          <h3 id="trade-heading">Paper trade</h3>
+          <p class="muted">Market orders are submitted to your Alpaca paper account only.</p>
+          <div class="trade-controls">
+            <label for="order-quantity">Shares</label>
+            <input id="order-quantity" type="number" min="0.000001" step="any"
+              inputmode="decimal" placeholder="Quantity">
+            <button type="button" data-order-side="buy">Buy</button>
+            <button type="button" data-order-side="sell">Sell</button>
+          </div>
+          <p id="trade-message" class="muted" role="status" aria-live="polite"></p>
+        </section>
+
+        <div class="section-heading">
+          <h2 id="chart-heading">Price change</h2>
+          <div class="chart-controls" role="group" aria-label="Chart time period">
+            <button type="button" data-period="1d" aria-pressed="true">1D</button>
+            <button type="button" data-period="1m" aria-pressed="false">1M</button>
+            <button type="button" data-period="1y" aria-pressed="false">1Y</button>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <svg id="chart" viewBox="0 0 900 320" role="img" aria-labelledby="chart-heading"></svg>
+          <p id="chart-message" class="muted">Select an asset to see its price history.</p>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const money = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD"
+      });
+      const quantityFormat = new Intl.NumberFormat("en-US", {
+        maximumFractionDigits: 6
+      });
+      const percentage = new Intl.NumberFormat("en-US", {
+        style: "percent",
+        signDisplay: "always",
+        maximumFractionDigits: 2
+      });
+      const chartPeriods = { "1d": "1 day", "1m": "1 month", "1y": "1 year" };
+      const svgNamespace = "http://www.w3.org/2000/svg";
+      const assetSelect = document.querySelector("#asset-select");
+      const assetSearch = document.querySelector("#asset-search");
+      const searchResults = document.querySelector("#search-results");
+      const loginScreen = document.querySelector("#login-screen");
+      const dashboard = document.querySelector("#dashboard");
+      const loginForm = document.querySelector("#login-form");
+      const loginMessage = document.querySelector("#login-message");
+      const loginSubmit = document.querySelector("#login-submit");
+      const themeToggles = document.querySelectorAll("[data-theme-toggle]");
+      let selectedSymbol = "";
+      let selectedPeriod = "1d";
+      let dashboardRequestId = 0;
+      let searchRequestId = 0;
+      let searchTimer;
+
+      function applyTheme(theme) {
+        const isDark = theme === "dark";
+        document.documentElement.dataset.theme = theme;
+        for (const toggle of themeToggles) {
+          toggle.textContent = isDark ? "☀" : "☾";
+          toggle.setAttribute(
+            "aria-label",
+            `Switch to ${isDark ? "light" : "dark"} mode`
+          );
+          toggle.title = `Switch to ${isDark ? "light" : "dark"} mode`;
+        }
+      }
+
+      applyTheme(localStorage.getItem("alpaca-dashboard-theme") || "dark");
+      themeToggles.forEach((toggle) => toggle.addEventListener("click", () => {
+        const theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        localStorage.setItem("alpaca-dashboard-theme", theme);
+        applyTheme(theme);
+      }));
+
+      function showLogin(message = "") {
+        dashboard.hidden = true;
+        loginScreen.hidden = false;
+        loginMessage.textContent = message;
+      }
+
+      function showDashboard() {
+        loginScreen.hidden = true;
+        dashboard.hidden = false;
+      }
+
+      async function checkAuthentication() {
+        try {
+          const response = await fetch("/api/auth/status");
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || `Request failed (${response.status})`);
+          }
+          if (data.authenticated) {
+            showDashboard();
+            await loadDashboard();
+          } else {
+            showLogin();
+          }
+        } catch (error) {
+          showLogin(`Unable to check account connection: ${error.message}`);
+        }
+      }
+
+      loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const apiKey = document.querySelector("#api-key").value;
+        const secretKey = document.querySelector("#secret-key").value;
+        loginSubmit.disabled = true;
+        loginMessage.textContent = "Connecting to your Alpaca paper account…";
+
+        try {
+          const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ api_key: apiKey, secret_key: secretKey })
+          });
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || `Connection failed (${response.status})`);
+          }
+          loginForm.reset();
+          showDashboard();
+          await loadDashboard();
+        } catch (error) {
+          loginMessage.textContent = `Unable to connect: ${error.message}`;
+        } finally {
+          loginSubmit.disabled = false;
+        }
+      });
+
+      document.querySelector("#secret-toggle").addEventListener("click", (event) => {
+        const secretInput = document.querySelector("#secret-key");
+        const showSecret = secretInput.type === "password";
+        secretInput.type = showSecret ? "text" : "password";
+        event.currentTarget.textContent = showSecret ? "Hide" : "Show";
+        event.currentTarget.setAttribute(
+          "aria-label",
+          `${showSecret ? "Hide" : "Show"} API secret`
+        );
+      });
+
+      document.querySelector("#logout").addEventListener("click", async (event) => {
+        const button = event.currentTarget;
+        button.disabled = true;
+        try {
+          const response = await fetch("/api/auth/logout", { method: "POST" });
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || `Logout failed (${response.status})`);
+          }
+          selectedSymbol = "";
+          loginForm.reset();
+          showLogin("You have been logged out.");
+        } catch (error) {
+          document.querySelector("#message").textContent =
+            `Unable to log out: ${error.message}`;
+        } finally {
+          button.disabled = false;
+        }
+      });
+
+      function setProfitColor(element, value) {
+        element.classList.toggle("positive", value > 0);
+        element.classList.toggle("negative", value < 0);
+      }
+
+      function makeSvgElement(name, attributes, text) {
+        const element = document.createElementNS(svgNamespace, name);
+        for (const [key, value] of Object.entries(attributes)) {
+          element.setAttribute(key, value);
+        }
+        if (text !== undefined) element.textContent = text;
+        return element;
+      }
+
+      function renderChart(bars) {
+        const chart = document.querySelector("#chart");
+        const chartMessage = document.querySelector("#chart-message");
+        chart.replaceChildren();
+
+        if (bars.length === 0) {
+          chartMessage.textContent = "No price history was returned for this period.";
+          return;
+        }
+
+        chartMessage.textContent = "";
+        const width = 900;
+        const height = 320;
+        const padding = { top: 20, right: 24, bottom: 42, left: 78 };
+        const prices = bars.map((bar) => bar.close);
+        let minPrice = Math.min(...prices);
+        let maxPrice = Math.max(...prices);
+        if (minPrice === maxPrice) {
+          minPrice *= 0.99;
+          maxPrice *= 1.01;
+        }
+        const pricePadding = (maxPrice - minPrice) * 0.08;
+        minPrice -= pricePadding;
+        maxPrice += pricePadding;
+        const plotWidth = width - padding.left - padding.right;
+        const plotHeight = height - padding.top - padding.bottom;
+        const x = (index) => padding.left +
+          (bars.length === 1 ? plotWidth / 2 : index * plotWidth / (bars.length - 1));
+        const y = (price) => padding.top +
+          (maxPrice - price) * plotHeight / (maxPrice - minPrice);
+
+        for (let tick = 0; tick <= 4; tick += 1) {
+          const value = maxPrice - (maxPrice - minPrice) * tick / 4;
+          const position = padding.top + plotHeight * tick / 4;
+          chart.append(
+            makeSvgElement("line", {
+              x1: padding.left, y1: position, x2: width - padding.right,
+              y2: position, class: "chart-grid"
+            }),
+            makeSvgElement("text", {
+              x: padding.left - 10, y: position + 4, "text-anchor": "end",
+              class: "chart-axis"
+            }, money.format(value))
+          );
+        }
+
+        const path = bars.map((bar, index) =>
+          `${index === 0 ? "M" : "L"} ${x(index)} ${y(bar.close)}`
+        ).join(" ");
+        chart.append(makeSvgElement("path", { d: path, class: "chart-line" }));
+
+        for (const index of [...new Set([0, Math.floor((bars.length - 1) / 2), bars.length - 1])]) {
+          const date = new Date(bars[index].timestamp);
+          const label = selectedPeriod === "1d"
+            ? date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+            : date.toLocaleDateString([], { month: "short", day: "numeric", year: "2-digit" });
+          chart.append(makeSvgElement("text", {
+            x: x(index), y: height - 12, "text-anchor": "middle", class: "chart-axis"
+          }, label));
+        }
+
+        const change = prices[prices.length - 1] / prices[0] - 1;
+        const changeLabel = ` · ${percentage.format(change)} for ${chartPeriods[selectedPeriod]}`;
+        document.querySelector("#chart-heading").textContent =
+          `${selectedSymbol} price${changeLabel}`;
+        setProfitColor(document.querySelector("#chart-heading"), change);
+      }
+
+      async function searchAssets(query) {
+        const requestId = ++searchRequestId;
+        if (!query.trim()) {
+          searchResults.replaceChildren();
+          return;
+        }
+
+        try {
+          const response = await fetch(`/api/assets/search?q=${encodeURIComponent(query)}`);
+          const data = await response.json();
+          if (requestId !== searchRequestId) return;
+          if (!response.ok) throw new Error(data.error || "Search failed.");
+
+          searchResults.replaceChildren();
+          for (const asset of data.assets) {
+            const item = document.createElement("li");
+            const option = document.createElement("button");
+            option.type = "button";
+            option.setAttribute("role", "option");
+            const symbol = document.createElement("strong");
+            symbol.textContent = asset.symbol;
+            const name = document.createElement("small");
+            name.textContent = asset.name;
+            option.append(symbol, name);
+            option.addEventListener("click", () => {
+              selectedSymbol = asset.symbol;
+              assetSearch.value = "";
+              searchResults.replaceChildren();
+              loadDashboard();
+            });
+            item.append(option);
+            searchResults.append(item);
+          }
+          if (data.assets.length === 0) {
+            const item = document.createElement("li");
+            item.textContent = "No tradable stocks or ETFs found.";
+            item.className = "muted";
+            item.style.padding = "10px 12px";
+            searchResults.replaceChildren(item);
+          }
+        } catch (error) {
+          if (requestId === searchRequestId) {
+            searchResults.replaceChildren();
+            document.querySelector("#message").textContent =
+              `Unable to search assets: ${error.message}`;
+          }
+        }
+      }
+
+      async function submitOrder(side) {
+        const quantityInput = document.querySelector("#order-quantity");
+        const tradeMessage = document.querySelector("#trade-message");
+        const quantity = Number(quantityInput.value);
+        if (!selectedSymbol) {
+          tradeMessage.textContent = "Select or search for a stock or ETF first.";
+          return;
+        }
+        if (!Number.isFinite(quantity) || quantity <= 0) {
+          tradeMessage.textContent = "Enter a share quantity greater than zero.";
+          quantityInput.focus();
+          return;
+        }
+
+        const action = side === "buy" ? "Buy" : "Sell";
+        if (!window.confirm(
+          `${action} ${quantityFormat.format(quantity)} ${selectedSymbol} with a paper market order?`
+        )) return;
+
+        const buttons = document.querySelectorAll("[data-order-side]");
+        buttons.forEach((button) => { button.disabled = true; });
+        tradeMessage.textContent = "Submitting paper order…";
+        try {
+          const response = await fetch("/api/orders", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ symbol: selectedSymbol, side, qty: quantity })
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error || "Order was rejected.");
+          tradeMessage.textContent =
+            `${action} order for ${data.qty} ${data.symbol} submitted (${data.status}).`;
+          quantityInput.value = "";
+          loadDashboard();
+        } catch (error) {
+          tradeMessage.textContent = `Order failed: ${error.message}`;
+        } finally {
+          buttons.forEach((button) => { button.disabled = false; });
+        }
+      }
+
+      async function loadDashboard() {
+        const button = document.querySelector("#refresh");
+        const message = document.querySelector("#message");
+        const requestId = ++dashboardRequestId;
+        button.disabled = true;
+        message.textContent = "Loading account and market data…";
+
+        const params = new URLSearchParams({ period: selectedPeriod });
+        if (selectedSymbol) params.set("symbol", selectedSymbol);
+
+        try {
+          const response = await fetch(`/api/dashboard?${params}`);
+          const data = await response.json();
+          if (requestId !== dashboardRequestId) return;
+          if (!response.ok) {
+            const error = new Error(data.error || `Request failed (${response.status})`);
+            error.status = response.status;
+            throw error;
+          }
+
+          document.querySelector("#status").textContent =
+            String(data.account.status).split(".").pop();
+          document.querySelector("#cash").textContent =
+            money.format(Number(data.account.cash));
+          document.querySelector("#buying-power").textContent =
+            money.format(Number(data.account.buying_power));
+
+          const previousSymbol = selectedSymbol;
+          assetSelect.replaceChildren();
+          for (const position of data.positions) {
+            const option = document.createElement("option");
+            option.value = position.symbol;
+            option.textContent = position.symbol;
+            assetSelect.append(option);
+          }
+          if (data.selected && !data.positions.some((item) => item.symbol === data.selected.symbol)) {
+            const option = document.createElement("option");
+            option.value = data.selected.symbol;
+            option.textContent = `${data.selected.symbol} (not held)`;
+            assetSelect.append(option);
+          }
+          selectedSymbol = data.positions.some((item) => item.symbol === previousSymbol)
+            ? previousSymbol
+            : (data.selected?.symbol || "");
+          assetSelect.value = selectedSymbol;
+          assetSelect.disabled = data.positions.length === 0;
+
+          const selected = data.selected;
+          if (selected) {
+            document.querySelector("#price").textContent = selected.current_price === null
+              ? "—"
+              : money.format(selected.current_price);
+            document.querySelector("#quantity").textContent =
+              quantityFormat.format(selected.qty);
+            const profitLoss = document.querySelector("#profit-loss");
+            profitLoss.textContent = money.format(selected.unrealized_pl);
+            setProfitColor(profitLoss, selected.unrealized_pl);
+            const profitLossPercent = document.querySelector("#profit-loss-percent");
+            profitLossPercent.textContent =
+              `${percentage.format(selected.unrealized_plpc)} of cost basis`;
+            setProfitColor(profitLossPercent, selected.unrealized_plpc);
+            renderChart(data.bars);
+          } else {
+            for (const selector of ["#price", "#quantity", "#profit-loss"]) {
+              document.querySelector(selector).textContent = "—";
+            }
+            document.querySelector("#profit-loss-percent").textContent = "";
+            document.querySelector("#chart-heading").textContent = "Price change";
+            document.querySelector("#chart").replaceChildren();
+            document.querySelector("#chart-message").textContent =
+              "No open positions in this account.";
+          }
+
+          document.querySelector("#updated").textContent =
+            `Updated ${new Date().toLocaleTimeString()}`;
+          message.textContent = "";
+        } catch (error) {
+          if (requestId === dashboardRequestId) {
+            if (error.status === 401) {
+              showLogin(error.message);
+            } else {
+              message.textContent = `Unable to load Alpaca data: ${error.message}`;
+            }
+          }
+        } finally {
+          if (requestId === dashboardRequestId) button.disabled = false;
+        }
+      }
+
+      assetSelect.addEventListener("change", () => {
+        selectedSymbol = assetSelect.value;
+        loadDashboard();
+      });
+      assetSearch.addEventListener("input", () => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => searchAssets(assetSearch.value), 250);
+      });
+      document.querySelectorAll("[data-order-side]").forEach((button) => {
+        button.addEventListener("click", () => submitOrder(button.dataset.orderSide));
+      });
+      document.querySelector("#refresh").addEventListener("click", loadDashboard);
+      document.querySelectorAll("[data-period]").forEach((button) => {
+        button.addEventListener("click", () => {
+          selectedPeriod = button.dataset.period;
+          document.querySelectorAll("[data-period]").forEach((periodButton) => {
+            periodButton.setAttribute(
+              "aria-pressed",
+              String(periodButton === button)
+            );
+          });
+          loadDashboard();
+        });
+      });
+      checkAuthentication();
+    </script>
+  </body>
+</html>
